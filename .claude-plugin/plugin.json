@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "product-ops-plugin",
+  "displayName": "Product Operations",
+  "version": "1.0.0",
+  "description":  "Product catalogue management, auditing, and security automation.",
+  "author": {
+    "name": "Your Team",
+    "email": "engineering@yourcompany.com",
+    "url": "https://github.com/your-org/product-manager-plugin"
+  },
+  "homepage": "https://github.com/your-org/product-manager-plugin",
+  "repository": "https://github.com/your-org/product-manager-plugin",
+  "license": "MIT",
+  "keywords": ["products", "catalogue", "api", "management"],
+  "mcpServers": {
+    "product-api": {
+      "type": "http",
+      "url": "https://product-management-api-render.onrender.com/mcp"
+    }
+  } 
+}

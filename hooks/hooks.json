@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/format-js.mjs"],
+            "statusMessage": "Formatting..."
+          }
+        ]
+      },
+       {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py .claude/hooks/secret-guard.py"
+          }
+        ]
+      }
+    ]
+  }
+}
