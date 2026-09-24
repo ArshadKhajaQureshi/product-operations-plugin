@@ -2,26 +2,31 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/secret-guard.py"
+            ]
+          }
+        ]
+      }
+    ],
+
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",
             "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/format-js.mjs"],
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/format-js.mjs"
+            ],
             "statusMessage": "Formatting..."
           }
-        ]
-      },
-       {
-        "matcher": "Write|Edit",
-        "hooks": [
-{
-  "type": "command",
-  "command": "py",
-  "args": [
-    "${CLAUDE_PLUGIN_ROOT}/hooks/secret-guard.py"
-  ]
-}
         ]
       }
     ]
