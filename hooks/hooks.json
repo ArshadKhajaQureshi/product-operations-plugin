@@ -15,10 +15,13 @@
        {
         "matcher": "Write|Edit",
         "hooks": [
-          {
-            "type": "command",
-            "command": "py .claude/hooks/secret-guard.py"
-          }
+{
+  "type": "command",
+  "command": "py",
+  "args": [
+    "${CLAUDE_PLUGIN_ROOT}/hooks/secret-guard.py"
+  ]
+}
         ]
       }
     ]
