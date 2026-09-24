@@ -9,9 +9,13 @@ PATTERNS = [
     ("OpenAI Key", r"sk-[A-Za-z0-9]{20,}"),
     ("GitHub Token", r"ghp_[A-Za-z0-9]{30,}"),
     ("AWS Secret", r"(?i)aws.{0,20}secret.{0,20}[A-Za-z0-9/+]{20,}"),
-    ("Password", r"(?i)password\s*[:=]\s*[\"']?.+[\"']?"),
-    ("API key assignment", r"(?i)[A-Za-z0-9_]*(?:api[_-]?key|secret|token)\s*[:=]\s*[\"']?[^\s\"']+"),
+    # The optional quote after the key lets these match JSON/YAML keys as well as env-style assignments.
+    ("Password", r"(?i)password[\"']?\s*[:=]\s*[\"']?[^\s\"']+"),
+    ("API key assignment", r"(?i)[A-Za-z0-9_]*(?:api[_-]?key|secret|token)[\"']?\s*[:=]\s*[\"']?[^\s\"']+"),
 ]
+
+# Only the content being written is scanned; file_path and old_string are ignored.
+WRITTEN_FIELDS = ("content", "new_string")
 
 
 def deny(reason):
@@ -29,11 +33,17 @@ def deny(reason):
     )
 
 
+def written_text(tool_input):
+    """Return the raw text a tool call is about to write (not JSON-escaped)."""
+    parts = [tool_input.get(field, "") for field in WRITTEN_FIELDS]
+    for edit in tool_input.get("edits", []):  # MultiEdit
+        parts.append(edit.get("new_string", ""))
+    return "\n".join(p for p in parts if isinstance(p, str))
+
+
 try:
     data = json.load(sys.stdin)
-
-    # Only scan what the tool is about to write, not the whole event
-    text = json.dumps(data.get("tool_input", {}))
+    text = written_text(data.get("tool_input", {}))
 
     for name, pattern in PATTERNS:
         if re.search(pattern, text):
